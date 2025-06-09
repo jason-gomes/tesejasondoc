@@ -252,10 +252,10 @@ export default function Home() {
   ]
 
   const citations = {
-    abnt: `SANTOS, Jason Gomes Rodrigues. **Escola e Instituição Total**: Aproximações e distanciamentos na escolarização de crianças. [S. l.]: [s. n.], 2025. Disponível em: ${currentUrl}. Acesso em: ${currentDate}.`,
-    apa: `Santos, J. G. R. (2025). *Escola e Instituição Total: Aproximações e distanciamentos na escolarização de crianças* [Artigo interativo baseado em tese de doutorado]. Disponível em ${currentUrl}.`,
-    vancouver: `Santos JGR. Escola e Instituição Total: Aproximações e distanciamentos na escolarização de crianças [Internet]. [S. l.]: [s. n.]; 2025 [citado ${currentDate}]. Disponível em: ${currentUrl}`,
-    mla: `Santos, Jason Gomes Rodrigues. "Escola e Instituição Total: Aproximações e distanciamentos na escolarização de crianças." Artigo interativo baseado em tese de doutorado, 2025, ${currentUrl}. Acesso em ${currentDate}.`,
+    abnt: `SANTOS, Jason Gomes Rodrigues. **Escola e Instituição Total**: aproximações e distanciamentos na escolarização de crianças. 2021. 189 f. Tese (Doutorado em Educação) - Escola de Filosofia, Letras e Ciências Humanas, Universidade Federal de São Paulo, Guarulhos, 2021. Disponível em: https://repositorio.unifesp.br/server/api/core/bitstreams/01145e4e-94e0-4ea9-9717-bb2eaba8a160/content. Acesso em: ${currentDate}.`,
+    apa: `Santos, J. G. R. (2021). *Escola e Instituição Total: aproximações e distanciamentos na escolarização de crianças* [Tese de doutorado, Universidade Federal de São Paulo]. Repositório Institucional UNIFESP. https://repositorio.unifesp.br/server/api/core/bitstreams/01145e4e-94e0-4ea9-9717-bb2eaba8a160/content`,
+    vancouver: `Santos JGR. Escola e Instituição Total: aproximações e distanciamentos na escolarização de crianças [tese]. Guarulhos: Universidade Federal de São Paulo, Escola de Filosofia, Letras e Ciências Humanas; 2021 [citado ${currentDate}]. Disponível em: https://repositorio.unifesp.br/server/api/core/bitstreams/01145e4e-94e0-4ea9-9717-bb2eaba8a160/content`,
+    mla: `Santos, Jason Gomes Rodrigues. "Escola e Instituição Total: aproximações e distanciamentos na escolarização de crianças." Tese de doutorado, Universidade Federal de São Paulo, 2021. Repositório Institucional UNIFESP, https://repositorio.unifesp.br/server/api/core/bitstreams/01145e4e-94e0-4ea9-9717-bb2eaba8a160/content. Acesso em ${currentDate}.`,
   }
 
   const copyToClipboard = useCallback(async () => {
@@ -897,8 +897,8 @@ export default function Home() {
                 Como Citar este Artigo Interativo
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                Este conteúdo é uma adaptação interativa da tese de doutorado de Jason Gomes Rodrigues Santos. Sinta-se
-                à vontade para utilizá-lo, desde que cite a fonte conforme as regras de licenciamento.
+                Para citar a tese original de doutorado de Jason Gomes Rodrigues Santos, defendida na UNIFESP em 2021,
+                utilize uma das formatações abaixo conforme as normas de sua instituição.
               </p>
             </div>
 
