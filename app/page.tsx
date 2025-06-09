@@ -8,14 +8,8 @@ import {
   Moon,
   Download,
   ExternalLink,
-  ChevronDown,
-  ChevronUp,
-  TrendingUp,
-  TrendingDown,
-  Users,
-  Building,
-  GraduationCap,
   MessageCircle,
+  Users,
   ArrowRight,
   AlertCircle,
   Search,
@@ -28,16 +22,29 @@ import {
 } from "lucide-react"
 import { useTheme } from "next-themes"
 import { cn } from "@/lib/utils"
+import { ConceptCard } from "@/components/concept-card"
+import { SchoolCard } from "@/components/school-card"
+import { TeacherCard } from "@/components/teacher-card"
+import { SectionHeader } from "@/components/section-header"
+import {
+  siteConfig,
+  navItems,
+  concepts,
+  schools,
+  teachers,
+  medicalizationSteps,
+  testingImpacts,
+  conclusionContent,
+  getCitations,
+} from "@/data/content"
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("")
-  const [expandedConcept, setExpandedConcept] = useState<string | null>(null)
   const [activeTeacherView, setActiveTeacherView] = useState<"approach" | "dynamics">("approach")
   const [activeMedicalizationStep, setActiveMedicalizationStep] = useState<number | null>(null)
   const [activeCitationStyle, setActiveCitationStyle] = useState("abnt")
   const [copied, setCopied] = useState(false)
-  const [currentUrl, setCurrentUrl] = useState("")
   const [currentDate, setCurrentDate] = useState("")
   const { setTheme, theme } = useTheme()
   const [mounted, setMounted] = useState(false)
@@ -45,7 +52,6 @@ export default function Home() {
   useEffect(() => {
     setMounted(true)
     if (typeof window !== "undefined") {
-      setCurrentUrl(window.location.href)
       const today = new Date()
       const day = String(today.getDate()).padStart(2, "0")
       const month = String(today.getMonth() + 1).padStart(2, "0")
@@ -83,180 +89,7 @@ export default function Home() {
     setIsMenuOpen(false)
   }, [])
 
-  const navItems = [
-    { href: "#concepts", label: "Conceitos Teóricos" },
-    { href: "#schools", label: "As Escolas" },
-    { href: "#teachers", label: "As Professoras" },
-    { href: "#logic", label: "Lógica da Medicalização" },
-    { href: "#testing", label: "Avaliações" },
-    { href: "#conclusion", label: "Conclusão" },
-    { href: "#citation", label: "Como Citar" },
-  ]
-
-  const concepts = [
-    {
-      id: "total-institution",
-      title: "Instituição Total",
-      author: "Goffman",
-      summary:
-        "Local de residência e trabalho onde um grande número de indivíduos em situação semelhante, isolados da sociedade, levam uma vida fechada e formalmente administrada.",
-      details:
-        'Uma "instituição total" é definida pela quebra das barreiras entre as esferas da vida (dormir, brincar, trabalhar) e pela administração centralizada e formal de todas as atividades diárias para um grande grupo de indivíduos em situações semelhantes, isolados da sociedade mais ampla.',
-      color: "blue",
-    },
-    {
-      id: "mortification",
-      title: "Mortificação do Eu",
-      author: "Goffman",
-      summary:
-        "Processo que ataca a autoconcepção do indivíduo ao entrar na instituição, forçando-o a abandonar papéis anteriores e submeter-se às novas regras e hierarquias.",
-      details:
-        'Este processo descreve os ataques à autoconcepção e à "cultura aparente" de um indivíduo ao entrar na instituição, forçando-o a abandonar papéis anteriores e a se submeter às regras institucionais.',
-      color: "amber",
-    },
-    {
-      id: "staff-team",
-      title: "Equipe Dirigente",
-      author: "Goffman",
-      summary:
-        'Equipe que gerencia a instituição e trata os internos como "objetos" ou "produtos" a serem processados, mantendo uma clara distinção social e de poder.',
-      details:
-        'Refere-se à equipe responsável pela gestão da instituição, cujo trabalho envolve pessoas como "objetos e produtos". Este conceito é crucial para analisar os papéis da gestão escolar e dos professores.',
-      color: "slate",
-    },
-  ]
-
-  const schools = [
-    {
-      name: "Escola Alan de Castro",
-      ideb: 6.9,
-      meta: 5.5,
-      status: "high",
-      students: "~900",
-      infrastructure: 'Favorável, percebida como "escola de elite"',
-      staff: "Estável, professores experientes",
-      quote:
-        'A pressão por resultados leva a um foco no "treinamento" para os testes, como o SARESP, em vez de uma aprendizagem genuína.',
-      color: "green",
-    },
-    {
-      name: "Escola Zilma de Alencar",
-      ideb: 5.4,
-      meta: 5.4,
-      status: "low",
-      students: "~600",
-      infrastructure: "Precária (sala de informática trancada, quadra interditada)",
-      staff: "Alta rotatividade, professores temporários e sem experiência",
-      quote:
-        "A frustração é grande quando as metas não são atingidas. A sensação é de recomeçar do zero a cada ano, como o castigo de Sísifo.",
-      color: "red",
-    },
-  ]
-
-  const teachers = [
-    {
-      name: "Pamela",
-      school: "IDEB Alto",
-      color: "blue",
-      approach: {
-        vision: "Qualquer criança aprende, pode ter a síndrome que for. Ela sempre traz novidades.",
-        strategy:
-          "Empática e dialógica. Usa a própria história de dificuldade para se conectar e conecta a aprendizagem ao mundo dos alunos.",
-      },
-      dynamics: {
-        keyword:
-          'Diálogo. Usa a "palavra internamente persuasiva" (Bakhtin), onde os erros são oportunidades: "Quando erra, aprende".',
-        interaction:
-          "Incentiva os alunos a explicarem seu raciocínio. Não foca no erro e busca construir a autoconfiança.",
-      },
-    },
-    {
-      name: "Fernanda",
-      school: "IDEB Baixo",
-      color: "amber",
-      approach: {
-        vision: "Chegam com comportamento bem difícil. Acabou a hora de brincar. Aqui é sentar e fazer.",
-        strategy:
-          'Foco na disciplina e conformidade. Vê a educação infantil como "brincadeira" e estabelece uma fronteira rígida.',
-      },
-      dynamics: {
-        keyword:
-          'Obediência. Usa a "palavra autoritária" (Bakhtin), onde não há diálogo, apenas o cumprimento de ordens.',
-        interaction:
-          'A atividade é um "pretexto para o uso da palavra autoritária". Questionamentos são redirecionados para seguir regras.',
-      },
-    },
-  ]
-
-  const medicalizationSteps = [
-    {
-      id: 0,
-      title: "Dificuldade de Aprendizagem",
-      quotes: [
-        {
-          text: "A gente identifica as crianças com dificuldades, mas o que fazer com elas?",
-          source: "Fala recorrente da gestão e professores. (Página 109)",
-        },
-      ],
-    },
-    {
-      id: 1,
-      title: '"Tateando no Escuro"',
-      quotes: [
-        {
-          text: "A gente fica um pouco perdido [...] tateando no escuro [...] não sou especialista.",
-          source: "Discurso da gestão. (Página 46)",
-        },
-      ],
-    },
-    {
-      id: 2,
-      title: "Externalização da Culpa",
-      quotes: [
-        {
-          text: "Muitas vezes, é problema de estruturação de família [...] pais são mais ausentes.",
-          source: "Fala da gestão. (Página 45)",
-        },
-      ],
-    },
-    {
-      id: 3,
-      title: 'Busca pelo "Laudo"',
-      quotes: [
-        {
-          text: "Precisa de um diagnóstico médico [...] Tem que ter um laudo.",
-          source: "Discurso da gestão. (Página 46)",
-        },
-      ],
-    },
-  ]
-
-  const testingImpacts = [
-    {
-      title: "Interferência e Distorção das Práticas",
-      description:
-        "A tese evidencia como o uso do IDEB distorce o processo educacional, transformando-o em uma busca por conformidade.",
-      quote:
-        "Constatamos também que políticas educacionais que utilizam o IDEB como expressão de qualidade e eficácia institucional constituem, nessas escolas, interferências que distorcem suas práticas educativas.",
-      source: "Página 5, Resumo",
-      color: "red",
-    },
-    {
-      title: "Pressão e Cobrança por Metas",
-      description: "Gestores e professores sentem a pressão para que os alunos atinjam as metas das avaliações.",
-      quote:
-        "O importante é preparar os alunos para a escola atingir as metas. O que a gente pode fazer? É preparar esse aluno para chegar lá.",
-      source: "Página 48, Fala da vice-diretora",
-      color: "orange",
-    },
-  ]
-
-  const citations = {
-    abnt: `SANTOS, Jason Gomes Rodrigues. **Escola e Instituição Total**: aproximações e distanciamentos na escolarização de crianças. 2021. 189 f. Tese (Doutorado em Educação) - Escola de Filosofia, Letras e Ciências Humanas, Universidade Federal de São Paulo, Guarulhos, 2021. Disponível em: https://repositorio.unifesp.br/server/api/core/bitstreams/01145e4e-94e0-4ea9-9717-bb2eaba8a160/content. Acesso em: ${currentDate}.`,
-    apa: `Santos, J. G. R. (2021). *Escola e Instituição Total: aproximações e distanciamentos na escolarização de crianças* [Tese de doutorado, Universidade Federal de São Paulo]. Repositório Institucional UNIFESP. https://repositorio.unifesp.br/server/api/core/bitstreams/01145e4e-94e0-4ea9-9717-bb2eaba8a160/content`,
-    vancouver: `Santos JGR. Escola e Instituição Total: aproximações e distanciamentos na escolarização de crianças [tese]. Guarulhos: Universidade Federal de São Paulo, Escola de Filosofia, Letras e Ciências Humanas; 2021 [citado ${currentDate}]. Disponível em: https://repositorio.unifesp.br/server/api/core/bitstreams/01145e4e-94e0-4ea9-9717-bb2eaba8a160/content`,
-    mla: `Santos, Jason Gomes Rodrigues. "Escola e Instituição Total: aproximações e distanciamentos na escolarização de crianças." Tese de doutorado, Universidade Federal de São Paulo, 2021. Repositório Institucional UNIFESP, https://repositorio.unifesp.br/server/api/core/bitstreams/01145e4e-94e0-4ea9-9717-bb2eaba8a160/content. Acesso em ${currentDate}.`,
-  }
+  const citations = getCitations(currentDate)
 
   const copyToClipboard = useCallback(async () => {
     try {
@@ -267,7 +100,7 @@ export default function Home() {
     } catch (err) {
       console.error("Falha ao copiar texto: ", err)
     }
-  }, [activeCitationStyle])
+  }, [activeCitationStyle, citations])
 
   // Loading state for theme
   if (!mounted) {
@@ -290,7 +123,7 @@ export default function Home() {
                   ET
                 </span>
               </div>
-              <span className="font-bold text-gray-900 dark:text-white">Escola e Instituição Total</span>
+              <span className="font-bold text-gray-900 dark:text-white">{siteConfig.title}</span>
             </div>
 
             {/* Desktop Navigation */}
@@ -376,17 +209,16 @@ export default function Home() {
                 id="hero-title"
                 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight"
               >
-                Escola e{" "}
+                {siteConfig.title.split(" e ")[0]} e{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">
-                  Instituição Total
+                  {siteConfig.title.split(" e ")[1]}
                 </span>
               </h1>
               <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-4xl mx-auto leading-relaxed">
-                Aproximações e distanciamentos na escolarização de crianças
+                {siteConfig.subtitle}
               </p>
               <p className="text-lg text-gray-500 dark:text-gray-400 max-w-3xl mx-auto mb-12">
-                Uma análise interativa sobre as práticas de conformidade e a medicalização do fracasso escolar em
-                escolas públicas brasileiras, baseada na tese de Jason Gomes Rodrigues Santos.
+                {siteConfig.description}
               </p>
             </div>
 
@@ -397,7 +229,7 @@ export default function Home() {
                 de doutorado completa no repositório da UNIFESP.
               </p>
               <a
-                href="https://repositorio.unifesp.br/server/api/core/bitstreams/01145e4e-94e0-4ea9-9717-bb2eaba8a160/content"
+                href={siteConfig.thesisUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors focus-visible:focus-visible"
@@ -414,73 +246,15 @@ export default function Home() {
         {/* Theoretical Concepts */}
         <section id="concepts" className="py-20 px-4" aria-labelledby="concepts-title">
           <div className="container mx-auto max-w-6xl">
-            <div className="text-center mb-16">
-              <h2 id="concepts-title" className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-                O Dilema da Escola Moderna
-              </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                A "forma escolar", por natureza, vive uma tensão fundamental: busca emancipar o indivíduo, mas, ao mesmo
-                tempo, precisa conformá-lo às normas sociais.
-              </p>
-            </div>
+            <SectionHeader
+              id="concepts-title"
+              title="O Dilema da Escola Moderna"
+              description='A "forma escolar", por natureza, vive uma tensão fundamental: busca emancipar o indivíduo, mas, ao mesmo tempo, precisa conformá-lo às normas sociais.'
+            />
 
             <div className="grid md:grid-cols-3 gap-8">
               {concepts.map((concept) => (
-                <div
-                  key={concept.id}
-                  className={cn(
-                    "transition-all duration-300 cursor-pointer rounded-lg border p-6 focus-visible:focus-visible",
-                    concept.color === "blue"
-                      ? "border-blue-200 bg-blue-50 hover:bg-blue-100 dark:border-blue-800 dark:bg-blue-950/50 dark:hover:bg-blue-900/50"
-                      : concept.color === "amber"
-                        ? "border-amber-200 bg-amber-50 hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/50 dark:hover:bg-amber-900/50"
-                        : "border-gray-200 bg-gray-50 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:bg-gray-700/50",
-                  )}
-                  onClick={() => setExpandedConcept(expandedConcept === concept.id ? null : concept.id)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault()
-                      setExpandedConcept(expandedConcept === concept.id ? null : concept.id)
-                    }
-                  }}
-                  aria-expanded={expandedConcept === concept.id}
-                  aria-controls={`concept-details-${concept.id}`}
-                >
-                  <h3
-                    className={cn(
-                      "text-xl font-bold mb-2",
-                      concept.color === "blue"
-                        ? "text-blue-800 dark:text-blue-300"
-                        : concept.color === "amber"
-                          ? "text-amber-800 dark:text-amber-300"
-                          : "text-gray-800 dark:text-gray-300",
-                    )}
-                  >
-                    {concept.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">({concept.author})</p>
-                  <p className="text-gray-700 dark:text-gray-300 mb-4">{concept.summary}</p>
-
-                  <div className="w-full flex items-center justify-between text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
-                    <span>{expandedConcept === concept.id ? "Mostrar Menos" : "Saiba Mais"}</span>
-                    {expandedConcept === concept.id ? (
-                      <ChevronUp className="h-4 w-4" aria-hidden="true" />
-                    ) : (
-                      <ChevronDown className="h-4 w-4" aria-hidden="true" />
-                    )}
-                  </div>
-
-                  {expandedConcept === concept.id && (
-                    <div
-                      id={`concept-details-${concept.id}`}
-                      className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600 animate-fade-in"
-                    >
-                      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{concept.details}</p>
-                    </div>
-                  )}
-                </div>
+                <ConceptCard key={concept.id} {...concept} />
               ))}
             </div>
           </div>
@@ -489,85 +263,15 @@ export default function Home() {
         {/* School Comparison */}
         <section id="schools" className="py-20 px-4 bg-gray-50 dark:bg-gray-800/30" aria-labelledby="schools-title">
           <div className="container mx-auto max-w-6xl">
-            <div className="text-center mb-16">
-              <h2 id="schools-title" className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-                As Escolas em Foco: Sucesso no Papel vs. Realidade
-              </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                A pesquisa comparou duas escolas com desempenhos muito diferentes no IDEB. Uma, considerada "de
-                sucesso", e outra, com dificuldades.
-              </p>
-            </div>
+            <SectionHeader
+              id="schools-title"
+              title="As Escolas em Foco: Sucesso no Papel vs. Realidade"
+              description='A pesquisa comparou duas escolas com desempenhos muito diferentes no IDEB. Uma, considerada "de sucesso", e outra, com dificuldades.'
+            />
 
             <div className="grid md:grid-cols-2 gap-8">
               {schools.map((school) => (
-                <article
-                  key={school.name}
-                  className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-shadow"
-                >
-                  <header className="flex items-center gap-3 mb-4">
-                    <div
-                      className={cn(
-                        "p-2 rounded-lg",
-                        school.color === "green"
-                          ? "bg-green-100 dark:bg-green-900/30"
-                          : "bg-red-100 dark:bg-red-900/30",
-                      )}
-                      aria-hidden="true"
-                    >
-                      {school.color === "green" ? (
-                        <TrendingUp className="h-6 w-6 text-green-600 dark:text-green-400" />
-                      ) : (
-                        <TrendingDown className="h-6 w-6 text-red-600 dark:text-red-400" />
-                      )}
-                    </div>
-                    <h3
-                      className={cn(
-                        "text-xl font-bold",
-                        school.color === "green"
-                          ? "text-green-800 dark:text-green-300"
-                          : "text-red-800 dark:text-red-300",
-                      )}
-                    >
-                      {school.name}
-                    </h3>
-                  </header>
-
-                  <dl className="space-y-3 mb-4">
-                    <div className="flex items-center gap-2">
-                      <TrendingUp className="h-4 w-4 text-gray-500" aria-hidden="true" />
-                      <dt className="font-medium text-gray-900 dark:text-white">IDEB:</dt>
-                      <dd className="text-gray-700 dark:text-gray-300">
-                        {school.ideb} ({school.status === "high" ? "Acima" : "Abaixo"} da meta)
-                      </dd>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-gray-500" aria-hidden="true" />
-                      <dt className="font-medium text-gray-900 dark:text-white">Alunos:</dt>
-                      <dd className="text-gray-700 dark:text-gray-300">{school.students}</dd>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <Building className="h-4 w-4 text-gray-500 mt-1" aria-hidden="true" />
-                      <div>
-                        <dt className="font-medium text-gray-900 dark:text-white">Infraestrutura:</dt>
-                        <dd className="text-sm text-gray-600 dark:text-gray-400 mt-1">{school.infrastructure}</dd>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <GraduationCap className="h-4 w-4 text-gray-500 mt-1" aria-hidden="true" />
-                      <div>
-                        <dt className="font-medium text-gray-900 dark:text-white">Corpo Docente:</dt>
-                        <dd className="text-sm text-gray-600 dark:text-gray-400 mt-1">{school.staff}</dd>
-                      </div>
-                    </div>
-                  </dl>
-
-                  <footer className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <blockquote className="text-sm italic text-gray-600 dark:text-gray-400 leading-relaxed">
-                      "{school.quote}"
-                    </blockquote>
-                  </footer>
-                </article>
+                <SchoolCard key={school.name} {...school} />
               ))}
             </div>
           </div>
@@ -624,73 +328,7 @@ export default function Home() {
 
             <div id="teacher-content" className="grid md:grid-cols-2 gap-8" role="tabpanel">
               {teachers.map((teacher) => (
-                <article
-                  key={teacher.name}
-                  className={cn(
-                    "transition-all duration-300 rounded-lg border p-6",
-                    teacher.color === "blue"
-                      ? "border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950/30"
-                      : "border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30",
-                  )}
-                >
-                  <header className="mb-4">
-                    <h3
-                      className={cn(
-                        "text-2xl font-bold mb-2",
-                        teacher.color === "blue"
-                          ? "text-blue-800 dark:text-blue-300"
-                          : "text-amber-800 dark:text-amber-300",
-                      )}
-                    >
-                      {teacher.name}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400">({teacher.school})</p>
-                  </header>
-
-                  {activeTeacherView === "approach" && (
-                    <div className="space-y-4 animate-fade-in">
-                      <div>
-                        <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Visão do Aluno:</h4>
-                        <blockquote
-                          className={cn(
-                            "border-l-4 pl-4 italic text-gray-600 dark:text-gray-400",
-                            teacher.color === "blue"
-                              ? "border-blue-200 dark:border-blue-700"
-                              : "border-amber-200 dark:border-amber-700",
-                          )}
-                        >
-                          "{teacher.approach.vision}"
-                        </blockquote>
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Estratégia:</h4>
-                        <p className="text-gray-700 dark:text-gray-300">{teacher.approach.strategy}</p>
-                      </div>
-                    </div>
-                  )}
-
-                  {activeTeacherView === "dynamics" && (
-                    <div className="space-y-4 animate-fade-in">
-                      <div>
-                        <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Palavra-Chave:</h4>
-                        <blockquote
-                          className={cn(
-                            "border-l-4 pl-4 italic text-gray-600 dark:text-gray-400",
-                            teacher.color === "blue"
-                              ? "border-blue-200 dark:border-blue-700"
-                              : "border-amber-200 dark:border-amber-700",
-                          )}
-                        >
-                          {teacher.dynamics.keyword}
-                        </blockquote>
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Interação:</h4>
-                        <p className="text-gray-700 dark:text-gray-300">{teacher.dynamics.interaction}</p>
-                      </div>
-                    </div>
-                  )}
-                </article>
+                <TeacherCard key={teacher.name} {...teacher} activeView={activeTeacherView} />
               ))}
             </div>
           </div>
@@ -699,15 +337,11 @@ export default function Home() {
         {/* Medicalization Logic */}
         <section id="logic" className="py-20 px-4 bg-gray-50 dark:bg-gray-800/30" aria-labelledby="logic-title">
           <div className="container mx-auto max-w-6xl">
-            <div className="text-center mb-16">
-              <h2 id="logic-title" className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-                A Lógica da Medicalização: Culpando o Indivíduo
-              </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                Apesar das diferenças, as escolas convergem em um ponto crucial: como lidam com o fracasso escolar.
-                Clique nos passos para ver como essa lógica se desenrola.
-              </p>
-            </div>
+            <SectionHeader
+              id="logic-title"
+              title="A Lógica da Medicalização: Culpando o Indivíduo"
+              description="Apesar das diferenças, as escolas convergem em um ponto crucial: como lidam com o fracasso escolar. Clique nos passos para ver como essa lógica se desenrola."
+            />
 
             <div className="mb-12">
               <div
@@ -778,15 +412,11 @@ export default function Home() {
         {/* Standardized Testing Impact */}
         <section id="testing" className="py-20 px-4" aria-labelledby="testing-title">
           <div className="container mx-auto max-w-6xl">
-            <div className="text-center mb-16">
-              <h2 id="testing-title" className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-                O Impacto das Avaliações Padronizadas
-              </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                As políticas educacionais baseadas em métricas como o IDEB exercem uma profunda influência sobre as
-                práticas escolares.
-              </p>
-            </div>
+            <SectionHeader
+              id="testing-title"
+              title="O Impacto das Avaliações Padronizadas"
+              description="As políticas educacionais baseadas em métricas como o IDEB exercem uma profunda influência sobre as práticas escolares."
+            />
 
             <div className="grid md:grid-cols-2 gap-8">
               {testingImpacts.map((impact, index) => (
@@ -848,40 +478,26 @@ export default function Home() {
           aria-labelledby="conclusion-title"
         >
           <div className="container mx-auto max-w-6xl">
-            <div className="text-center mb-16">
-              <h2 id="conclusion-title" className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-                Conclusão: A Convergência para o Totalitarismo
-              </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                A descoberta central da tese é que, apesar das diferenças de IDEB, infraestrutura e até de algumas
-                práticas pedagógicas, as duas escolas se aproximam em suas estratégias totalizadoras.
-              </p>
-            </div>
+            <SectionHeader
+              id="conclusion-title"
+              title="Conclusão: A Convergência para o Totalitarismo"
+              description="A descoberta central da tese é que, apesar das diferenças de IDEB, infraestrutura e até de algumas práticas pedagógicas, as duas escolas se aproximam em suas estratégias totalizadoras."
+            />
 
             <article className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-8">
               <header className="flex items-center gap-3 mb-6">
                 <div className="p-2 rounded-lg bg-amber-100 dark:bg-amber-900/50" aria-hidden="true">
                   <Eye className="h-6 w-6 text-amber-600 dark:text-amber-400" />
                 </div>
-                <h3 className="text-2xl font-bold text-amber-900 dark:text-amber-200">O Ponto Cego Institucional</h3>
+                <h3 className="text-2xl font-bold text-amber-900 dark:text-amber-200">{conclusionContent.title}</h3>
               </header>
               <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
-                <p>
-                  A professora Pamela, com sua abordagem dialógica, pode suavizar a experiência de seus alunos, mas
-                  quando fala sobre aqueles com dificuldades, seu discurso se iguala ao da professora Fernanda e ao da
-                  gestão: a culpa é da criança ou da família, e a solução é um diagnóstico externo.
-                </p>
-                <p>
-                  Essa convergência revela o verdadeiro motor da instituição escolar: gerenciar o desempenho, e não
-                  necessariamente promover a aprendizagem. As avaliações padronizadas, como o IDEB, intensificam essa
-                  tendência, forçando as escolas a adotarem práticas que apagam a singularidade dos alunos em nome de
-                  metas e rankings.
-                </p>
+                {conclusionContent.paragraphs.map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
+                ))}
                 <div className="bg-white/50 dark:bg-gray-900/50 p-6 rounded-lg border border-amber-200 dark:border-amber-700">
                   <p className="font-bold text-lg text-center text-amber-800 dark:text-amber-200">
-                    No fim, a escola "bem-sucedida" e a "malsucedida" usam a mesma lógica para lidar com quem não se
-                    encaixa, negando o direito à aprendizagem e reforçando seu papel de conformação social em detrimento
-                    da emancipação.
+                    {conclusionContent.highlight}
                   </p>
                 </div>
               </div>
@@ -892,15 +508,11 @@ export default function Home() {
         {/* Citation */}
         <section id="citation" className="py-20 px-4" aria-labelledby="citation-title">
           <div className="container mx-auto max-w-6xl">
-            <div className="text-center mb-16">
-              <h2 id="citation-title" className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-                Como Citar este Artigo Interativo
-              </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                Para citar a tese original de doutorado de Jason Gomes Rodrigues Santos, defendida na UNIFESP em 2021,
-                utilize uma das formatações abaixo conforme as normas de sua instituição.
-              </p>
-            </div>
+            <SectionHeader
+              id="citation-title"
+              title="Como Citar este Artigo Interativo"
+              description="Para citar a tese original de doutorado de Jason Gomes Rodrigues Santos, defendida na UNIFESP em 2021, utilize uma das formatações abaixo conforme as normas de sua instituição."
+            />
 
             <div className="grid md:grid-cols-2 gap-8">
               <article className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
@@ -910,7 +522,7 @@ export default function Home() {
                   Atribuição-NãoComercial-CompartilhaIgual 4.0 Internacional (CC BY-NC-SA 4.0).
                 </p>
                 <a
-                  href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.pt_BR"
+                  href={siteConfig.licenseUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium focus-visible:focus-visible"
@@ -975,8 +587,8 @@ export default function Home() {
         <div className="container mx-auto px-4 text-center">
           <p className="leading-relaxed">
             Aplicação web interativa desenvolvida com base na tese de doutorado de{" "}
-            <span className="font-semibold text-gray-900 dark:text-white">Jason Gomes Rodrigues Santos</span> (UNIFESP,
-            2021).
+            <span className="font-semibold text-gray-900 dark:text-white">{siteConfig.author}</span> (
+            {siteConfig.institution},{siteConfig.year}).
           </p>
           <p className="mt-2 text-sm text-gray-500 dark:text-gray-500">
             Redesenhado para melhor experiência do usuário e acessibilidade.
