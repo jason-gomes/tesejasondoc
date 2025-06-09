@@ -5,7 +5,7 @@ export const siteConfig = {
   title: "Escola e Instituição Total",
   subtitle: "Aproximações e distanciamentos na escolarização de crianças",
   description:
-    "Uma análise interativa sobre as práticas de conformidade e a medicalização do fracasso escolar em escolas públicas brasileiras, baseada na tese de Jason Gomes Rodrigues Santos.",
+    "Uma análise interativa sobre as práticas de conformidade e a medicalização do fracasso escolar em escolas públicas brasileiras, baseada na tese de doutorado Jason Gomes Rodrigues Santos.",
   author: "Jason Gomes Rodrigues Santos",
   institution: "UNIFESP",
   year: "2021",
@@ -165,7 +165,7 @@ export const testingImpacts = [
   {
     title: "Interferência e Distorção das Práticas",
     description:
-      "A tese evidencia como o uso do IDEB distorce o processo educacional, transformando-o em uma busca por conformidade.",
+      "A tese evidencia como o uso de avaliações padronizadas de desempenho escolar, como o IDEB, distorce o processo educacional, transformando-o em uma busca por conformidade.",
     quote:
       "Constatamos também que políticas educacionais que utilizam o IDEB como expressão de qualidade e eficácia institucional constituem, nessas escolas, interferências que distorcem suas práticas educativas.",
     source: "Página 5, Resumo",
